@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+    mysqlsrv:
+        image: mysql:5.7
+        restart: "always"
+        environment:
+            MYSQL_ROOT_PASSWORD: "root"
+        ports:
+            - 3306:3306
+        volumes:
+            - ./etc/volumes/mysql/data:/var/lib/mysql
+            - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
+        networks:
+            - devicemanager-compose-network
+
+    mysqladmin:
+        image: adminer
+        restart: "always"
+        ports:
+            - 8080:8080
+        networks:
+            - devicemanager-compose-network
+        
+    devicemanager:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: devicemanager
+        environment:
+            MYSQL_CONNECTION_STRING: "tcp(localhost:3306)/devicemanager?charset=utf8&parseTime=True&loc=Local"
+            MYSQL_USER: "root"
+            MYSQL_PASSWORD: "root"
+        container_name: devicemanager
+        command: /bin/bash
+        tty: true
+        volumes:
+            - .:/devicemanager
+        depends_on:
+            - mysqlsrv
+            - mysqladmin
+        external_links:
+            - mysqlsrv
+        networks:
+            - devicemanager-compose-network
+
+networks:
+    devicemanager-compose-network:
+        driver: bridge
+
+volumes:
+  mysql_devicemanager_data:
+    external: true

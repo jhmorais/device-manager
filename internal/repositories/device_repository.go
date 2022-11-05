@@ -30,12 +30,25 @@ func (d *deviceRepository) DeleteDevice(ctx context.Context, entity *entities.De
 		Error
 }
 
-func (d *deviceRepository) FindDevice(ctx context.Context, id string) (*entities.Device, error) {
+func (d *deviceRepository) FindDeviceByID(ctx context.Context, id string) (*entities.Device, error) {
 	var entity *entities.Device
 
 	err := d.db.
 		Preload(clause.Associations).
 		Where("id = ?", id).
+		Limit(1).
+		Find(&entity).Error
+
+	return entity, err
+}
+
+func (d *deviceRepository) FindDevice(ctx context.Context, brand string, name string) (*entities.Device, error) {
+	var entity *entities.Device
+
+	err := d.db.
+		Preload(clause.Associations).
+		Where("brand = ?", brand).
+		Where("name = ?", name).
 		Limit(1).
 		Find(&entity).Error
 

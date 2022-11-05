@@ -10,18 +10,18 @@ import (
 	"github.com/jhmorais/device-manager/internal/usecases/validator"
 )
 
-type deleteDeviceUseCase struct {
+type findDeviceByIDUseCase struct {
 	deviceRepository repositories.DeviceRepository
 }
 
-func NewDeleteDeviceUseCase(deviceRepository repositories.DeviceRepository) contracts.DeleteDeviceUseCase {
+func NewFindDeviceByIDUseCase(deviceRepository repositories.DeviceRepository) contracts.FindDeviceByIDUseCase {
 
-	return &deleteDeviceUseCase{
+	return &findDeviceByIDUseCase{
 		deviceRepository: deviceRepository,
 	}
 }
 
-func (c *deleteDeviceUseCase) Execute(ctx context.Context, deviceID string) (*output.DeleteDeviceOutput, error) {
+func (c *findDeviceByIDUseCase) Execute(ctx context.Context, deviceID string) (*output.FindDeviceOutput, error) {
 
 	if err := validator.ValidateUUId(deviceID, true, "deviceId"); err != nil {
 		return nil, err
@@ -29,21 +29,15 @@ func (c *deleteDeviceUseCase) Execute(ctx context.Context, deviceID string) (*ou
 
 	deviceEntity, err := c.deviceRepository.FindDeviceByID(ctx, deviceID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to find device '%s' at database: '%v'", deviceID, err)
+		return nil, fmt.Errorf("erro to find device '%s' at database: '%v'", deviceID, err)
 	}
 
 	if deviceEntity == nil || deviceEntity.ID == "" {
 		return nil, fmt.Errorf("deviceID not found")
 	}
 
-	err = c.deviceRepository.DeleteDevice(ctx, deviceEntity)
-	if err != nil {
-		return nil, fmt.Errorf("failed to delete device '%s'", deviceEntity.ID)
-	}
-
-	output := &output.DeleteDeviceOutput{
-		DeviceID:   deviceEntity.ID,
-		DeviceName: deviceEntity.Name,
+	output := &output.FindDeviceOutput{
+		Device: deviceEntity,
 	}
 
 	return output, nil

@@ -7,5 +7,5 @@ import (
 )
 
 type FindDeviceUseCase interface {
-	Execute(ctx context.Context, deviceID string) (*output.FindDeviceOutput, error)
+	Execute(ctx context.Context, brand, name string) (*output.FindDeviceOutput, error)
 }

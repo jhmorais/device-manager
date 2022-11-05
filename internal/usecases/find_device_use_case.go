@@ -7,7 +7,6 @@ import (
 	"github.com/jhmorais/device-manager/internal/repositories"
 	"github.com/jhmorais/device-manager/internal/usecases/contracts"
 	"github.com/jhmorais/device-manager/internal/usecases/ports/output"
-	"github.com/jhmorais/device-manager/internal/usecases/validator"
 )
 
 type findDeviceUseCase struct {
@@ -21,19 +20,15 @@ func NewFindDeviceUseCase(deviceRepository repositories.DeviceRepository) contra
 	}
 }
 
-func (c *findDeviceUseCase) Execute(ctx context.Context, deviceID string) (*output.FindDeviceOutput, error) {
+func (c *findDeviceUseCase) Execute(ctx context.Context, brand, name string) (*output.FindDeviceOutput, error) {
 
-	if err := validator.ValidateUUId(deviceID, true, "deviceId"); err != nil {
-		return nil, err
-	}
-
-	deviceEntity, err := c.deviceRepository.FindDevice(ctx, deviceID)
+	deviceEntity, err := c.deviceRepository.FindDevice(ctx, brand, name)
 	if err != nil {
-		return nil, fmt.Errorf("erro to find device '%s' at database: '%v'", deviceID, err)
+		return nil, fmt.Errorf("erro to find device with name: '%s' and brand: '%s' at database: '%v'", name, brand, err)
 	}
 
 	if deviceEntity == nil || deviceEntity.ID == "" {
-		return nil, fmt.Errorf("deviceID not found")
+		return nil, fmt.Errorf("device not found")
 	}
 
 	output := &output.FindDeviceOutput{

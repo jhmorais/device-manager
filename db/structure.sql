@@ -1,0 +1,1 @@
+CREATE SCHEMA `device-manager` DEFAULT CHARACTER SET utf8;

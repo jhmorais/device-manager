@@ -7,6 +7,9 @@ test:
 compose-up:
 	docker-compose up -d
 
+compose-stop:
+	docker-compose stop
+
 docker-exec:
 	docker exec -it devicemanager /bin/bash
 

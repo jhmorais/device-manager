@@ -5,6 +5,7 @@ import (
 
 	"github.com/jhmorais/device-manager/config"
 	"github.com/jhmorais/device-manager/internal/domain/entities"
+	"github.com/jhmorais/device-manager/sample"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -23,7 +24,7 @@ func InitGormMysqlDB() (*gorm.DB, error) {
 
 	mysqlDb.AutoMigrate(&entities.Device{})
 
-	// sample.DBSeed(mysqlDb)
+	sample.DBSeed(mysqlDb)
 
 	return mysqlDb, err
 }

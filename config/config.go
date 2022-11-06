@@ -48,3 +48,7 @@ func GetMysqlUser() string {
 func GetMysqlPassword() string {
 	return viper.GetString("MYSQL_PASSWORD")
 }
+
+func GetServerPort() string {
+	return viper.GetString("SERVER_PORT")
+}

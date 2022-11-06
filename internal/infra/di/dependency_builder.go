@@ -20,9 +20,11 @@ type Repositories struct {
 }
 
 type Usecases struct {
-	CreateDeviceUseCase contracts.CreateDeviceUseCase
-	FindDeviceUseCase   contracts.FindDeviceUseCase
-	ListDeviceUseCase   contracts.ListDeviceUseCase
+	CreateDeviceUseCase   contracts.CreateDeviceUseCase
+	DeleteDeviceUseCase   contracts.DeleteDeviceUseCase
+	FindDeviceUseCase     contracts.FindDeviceUseCase
+	FindDeviceByIDUseCase contracts.FindDeviceByIDUseCase
+	ListDeviceUseCase     contracts.ListDeviceUseCase
 }
 
 func NewBuild() *DenpencyBuild {
@@ -52,7 +54,9 @@ func (d *DenpencyBuild) buildRepositories() *DenpencyBuild {
 
 func (d *DenpencyBuild) buildUseCases() *DenpencyBuild {
 	d.Usecases.CreateDeviceUseCase = usecases.NewCreateDeviceUseCase(d.Repositories.DeviceRepository)
+	d.Usecases.DeleteDeviceUseCase = usecases.NewDeleteDeviceUseCase(d.Repositories.DeviceRepository)
 	d.Usecases.FindDeviceUseCase = usecases.NewFindDeviceUseCase(d.Repositories.DeviceRepository)
+	d.Usecases.FindDeviceByIDUseCase = usecases.NewFindDeviceByIDUseCase(d.Repositories.DeviceRepository)
 	d.Usecases.ListDeviceUseCase = usecases.NewListDeviceUseCase(d.Repositories.DeviceRepository)
 
 	return d

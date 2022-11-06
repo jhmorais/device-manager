@@ -1,5 +1,5 @@
 run:
-	go run main.go
+	go run cmd/restserver/main.go
 
 test:
 	go test -cover -race ./...

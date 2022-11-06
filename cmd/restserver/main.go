@@ -17,13 +17,14 @@ func main() {
 	router := services.NewHTTPRouterDevice(dependencies.Usecases.CreateDeviceUseCase,
 		dependencies.Usecases.DeleteDeviceUseCase,
 		dependencies.Usecases.FindDeviceByIDUseCase,
-		dependencies.Usecases.FindDeviceUseCase,
-		dependencies.Usecases.ListDeviceUseCase)
+		dependencies.Usecases.FindDeviceByBrandUseCase,
+		dependencies.Usecases.ListDeviceUseCase,
+		dependencies.Usecases.UpdateDeviceUseCase)
 
+	fmt.Println("Starting SERVER, LISTEN PORT: " + config.GetServerPort())
 	deviceErr := http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), router)
 	if deviceErr != nil && deviceErr != http.ErrServerClosed {
 		fmt.Println("failed to create server rest on port: " + config.GetServerPort())
 		fmt.Println(deviceErr.Error())
 	}
-	fmt.Println("SERVER LISTEN PORT: " + config.GetServerPort())
 }

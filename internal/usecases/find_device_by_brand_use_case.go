@@ -9,30 +9,30 @@ import (
 	"github.com/jhmorais/device-manager/internal/usecases/ports/output"
 )
 
-type findDeviceUseCase struct {
+type findDeviceByBrandUseCase struct {
 	deviceRepository repositories.DeviceRepository
 }
 
-func NewFindDeviceUseCase(deviceRepository repositories.DeviceRepository) contracts.FindDeviceUseCase {
+func NewFindDeviceByBrandUseCase(deviceRepository repositories.DeviceRepository) contracts.FindDeviceByBrandUseCase {
 
-	return &findDeviceUseCase{
+	return &findDeviceByBrandUseCase{
 		deviceRepository: deviceRepository,
 	}
 }
 
-func (c *findDeviceUseCase) Execute(ctx context.Context, brand, name string) (*output.FindDeviceOutput, error) {
+func (c *findDeviceByBrandUseCase) Execute(ctx context.Context, brand string) (*output.ListDeviceOutput, error) {
 
-	deviceEntity, err := c.deviceRepository.FindDevice(ctx, brand, name)
+	deviceEntity, err := c.deviceRepository.FindDeviceByBrand(ctx, brand)
 	if err != nil {
 		return nil, fmt.Errorf("erro to find device with brand: '%s' at database: '%v'", brand, err)
 	}
 
-	if deviceEntity == nil || deviceEntity.ID == "" {
+	if len(deviceEntity) == 0 {
 		return nil, fmt.Errorf("device not found")
 	}
 
-	output := &output.FindDeviceOutput{
-		Device: deviceEntity,
+	output := &output.ListDeviceOutput{
+		Devices: deviceEntity,
 	}
 
 	return output, nil

@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"path/filepath"
@@ -14,14 +13,13 @@ const ServerEnvironment = "SERVER_ENVIRONMENT"
 
 func BuildConfigFilePath(configFileName string) string {
 	dir, _ := os.Getwd()
-	fmt.Println("dir: ", dir)
 	return filepath.Join(dir, configFileName)
 }
 
 func LoadServerEnvironmentVars() error {
 	_, filename, _, _ := runtime.Caller(0)
-	filePath := path.Join(path.Dir(filename), "config.json")
-	fmt.Println(filePath)
+	// filePath := path.Join(path.Dir(filename), "config.json")
+	// fmt.Println(filePath)
 
 	viper.SetDefault(ServerEnvironment, "config")
 	viper.SetConfigType("json")

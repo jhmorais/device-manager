@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+
+	"github.com/gorilla/mux"
 )
 
 const (
@@ -13,7 +16,6 @@ const (
 type ErrorModel struct {
 	Message string `json:"message"`
 	Type    string `json:"type"`
-	Code    int    `json:"code"`
 }
 
 func CommonMiddleware(next http.Handler) http.Handler {
@@ -38,4 +40,13 @@ func NewErrorResponse(msg string) *ErrorModel {
 		Message: msg,
 		Type:    ErrTypeError,
 	}
+}
+
+func RetrieveParam(r *http.Request, idParam string) (string, error) {
+	encodedID := mux.Vars(r)[idParam]
+	decodedID, err := url.QueryUnescape(encodedID)
+	if err != nil {
+		return "", err
+	}
+	return decodedID, nil
 }

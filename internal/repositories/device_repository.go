@@ -23,6 +23,13 @@ func (d *deviceRepository) CreateDevice(ctx context.Context, entity *entities.De
 		Error
 }
 
+func (d *deviceRepository) UpdateDevice(ctx context.Context, entity *entities.Device) error {
+	return d.db.
+		Session(&gorm.Session{FullSaveAssociations: false}).
+		Save(entity).
+		Error
+}
+
 func (d *deviceRepository) DeleteDevice(ctx context.Context, entity *entities.Device) error {
 	return d.db.
 		Session(&gorm.Session{FullSaveAssociations: false}).
@@ -37,6 +44,18 @@ func (d *deviceRepository) FindDeviceByID(ctx context.Context, id string) (*enti
 		Preload(clause.Associations).
 		Where("id = ?", id).
 		Limit(1).
+		Find(&entity).Error
+
+	return entity, err
+}
+
+func (d *deviceRepository) FindDeviceByBrand(ctx context.Context, brand string) ([]*entities.Device, error) {
+	var entity []*entities.Device
+
+	err := d.db.
+		Preload(clause.Associations).
+		Where("brand = ?", brand).
+		Limit(100).
 		Find(&entity).Error
 
 	return entity, err

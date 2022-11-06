@@ -20,11 +20,13 @@ type Repositories struct {
 }
 
 type Usecases struct {
-	CreateDeviceUseCase   contracts.CreateDeviceUseCase
-	DeleteDeviceUseCase   contracts.DeleteDeviceUseCase
-	FindDeviceUseCase     contracts.FindDeviceUseCase
-	FindDeviceByIDUseCase contracts.FindDeviceByIDUseCase
-	ListDeviceUseCase     contracts.ListDeviceUseCase
+	CreateDeviceUseCase      contracts.CreateDeviceUseCase
+	DeleteDeviceUseCase      contracts.DeleteDeviceUseCase
+	FindDeviceUseCase        contracts.FindDeviceUseCase
+	FindDeviceByBrandUseCase contracts.FindDeviceByBrandUseCase
+	FindDeviceByIDUseCase    contracts.FindDeviceByIDUseCase
+	ListDeviceUseCase        contracts.ListDeviceUseCase
+	UpdateDeviceUseCase      contracts.UpdateDeviceUseCase
 }
 
 func NewBuild() *DenpencyBuild {
@@ -56,8 +58,10 @@ func (d *DenpencyBuild) buildUseCases() *DenpencyBuild {
 	d.Usecases.CreateDeviceUseCase = usecases.NewCreateDeviceUseCase(d.Repositories.DeviceRepository)
 	d.Usecases.DeleteDeviceUseCase = usecases.NewDeleteDeviceUseCase(d.Repositories.DeviceRepository)
 	d.Usecases.FindDeviceUseCase = usecases.NewFindDeviceUseCase(d.Repositories.DeviceRepository)
+	d.Usecases.FindDeviceByBrandUseCase = usecases.NewFindDeviceByBrandUseCase(d.Repositories.DeviceRepository)
 	d.Usecases.FindDeviceByIDUseCase = usecases.NewFindDeviceByIDUseCase(d.Repositories.DeviceRepository)
 	d.Usecases.ListDeviceUseCase = usecases.NewListDeviceUseCase(d.Repositories.DeviceRepository)
+	d.Usecases.UpdateDeviceUseCase = usecases.NewUpdateDeviceUseCase(d.Repositories.DeviceRepository)
 
 	return d
 }

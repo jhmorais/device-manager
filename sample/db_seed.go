@@ -2,7 +2,6 @@ package sample
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -15,13 +14,21 @@ func DBSeed(db *gorm.DB) error {
 	deviceRepository := repositories.NewDeviceRepository(db)
 
 	err := createDevice(deviceRepository, "Iphone 14", "APPLE")
+	if err != nil {
+		return err
+	}
 
+	err = createDevice(deviceRepository, "Iphone 13", "APPLE")
+	if err != nil {
+		return err
+	}
+
+	err = createDevice(deviceRepository, "Galaxy S21", "SAMSUNG")
 	if err != nil {
 		return err
 	}
 
 	err = createDevice(deviceRepository, "Mi", "XIAOMI")
-
 	if err != nil {
 		return err
 	}
@@ -38,7 +45,6 @@ func createDevice(deviceRepository repositories.DeviceRepository, name string, b
 
 	_, err = deviceRepository.ListDevice(ctx)
 	if err != nil {
-		fmt.Println(err.Error())
 		return err
 	}
 

@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jhmorais/device-manager/internal/domain/entities"
@@ -36,11 +37,19 @@ func (c *createDeviceUseCase) Execute(ctx context.Context, createDevice *input.C
 		createDevice.Brand = createDevice.Brand[:250]
 	}
 
+	if createDevice.Name == "" {
+		return nil, fmt.Errorf("cannot create a device without name")
+	}
+
+	if createDevice.Brand == "" {
+		return nil, fmt.Errorf("cannot create a device without brand")
+	}
+
 	deviceEntity := &entities.Device{
 		ID:        id.String(),
 		Name:      createDevice.Name,
 		Brand:     createDevice.Brand,
-		CreatedAt: createDevice.CreatedAt,
+		CreatedAt: time.Now(),
 	}
 
 	err = c.deviceRepository.CreateDevice(ctx, deviceEntity)

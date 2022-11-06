@@ -14,7 +14,6 @@ func InitGormMysqlDB() (*gorm.DB, error) {
 	config.LoadServerEnvironmentVars()
 
 	dsn := fmt.Sprintf("%s:%s@%s", config.GetMysqlUser(), config.GetMysqlPassword(), config.GetMysqlConnectionString())
-	// fmt.Printf("%s \n", dsn)
 
 	mysqlDb, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 

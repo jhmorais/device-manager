@@ -11,8 +11,8 @@ func init() {
 	gofakeit.Seed(time.Now().UnixNano())
 }
 
-func NewTaskEntity() *entities.Device {
-	return NewDeviceEntityWithUser("", "")
+func NewDeviceEntity(brand, name string) *entities.Device {
+	return NewDeviceEntityWithUser(brand, name)
 }
 
 func NewDeviceEntityWithUser(brand, name string) *entities.Device {

@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -49,4 +51,12 @@ func RetrieveParam(r *http.Request, idParam string) (string, error) {
 		return "", err
 	}
 	return decodedID, nil
+}
+
+func ValidJSON(p interface{}) io.Reader {
+	data, err := json.Marshal(p)
+	if err != nil {
+		panic(err)
+	}
+	return bytes.NewReader(data)
 }

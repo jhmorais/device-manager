@@ -41,22 +41,23 @@ func NewHTTPRouterDevice(createDeviceUseCase contracts.CreateDeviceUseCase,
 	router.UseEncodedPath()
 	router.Use(utils.CommonMiddleware)
 
-	router.HandleFunc("/devices", handler.listDevices).Methods(http.MethodGet)
-	router.HandleFunc("/devices/{id}", handler.getDeviceByID).Methods(http.MethodGet)
-	router.HandleFunc("/devices/brand/{brand}", handler.getDevice).Methods(http.MethodGet)
-	router.HandleFunc("/devices/{id}", handler.deleteDevice).Methods(http.MethodDelete)
-	router.HandleFunc("/devices", handler.createDevice).Methods(http.MethodPost)
-	router.HandleFunc("/devices/{id}", handler.updateDevice).Methods(http.MethodPut)
+	router.HandleFunc("/devices", handler.ListDevices).Methods(http.MethodGet)
+	router.HandleFunc("/devices/{id}", handler.GetDeviceByID).Methods(http.MethodGet)
+	router.HandleFunc("/devices/brand/{brand}", handler.GetDevice).Methods(http.MethodGet)
+	router.HandleFunc("/devices/{id}", handler.DeleteDevice).Methods(http.MethodDelete)
+	router.HandleFunc("/devices", handler.CreateDevice).Methods(http.MethodPost)
+	router.HandleFunc("/devices/{id}", handler.UpdateDevice).Methods(http.MethodPut)
 
 	return router
 }
 
-func (h *Handler) listDevices(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) ListDevices(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	response, err := h.ListDeviceUseCase.Execute(ctx)
 	if err != nil {
 		utils.WriteErrModel(w, http.StatusNotFound,
 			utils.NewErrorResponse(fmt.Sprintf("failed to get devices, error: '%s'", err.Error())))
+		return
 	}
 
 	jsonResponse, err := json.Marshal(response)
@@ -70,7 +71,7 @@ func (h *Handler) listDevices(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, string(jsonResponse))
 }
 
-func (h *Handler) getDeviceByID(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetDeviceByID(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	id, err := utils.RetrieveParam(r, "id")
 	if err != nil {
@@ -82,6 +83,7 @@ func (h *Handler) getDeviceByID(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.WriteErrModel(w, http.StatusNotFound,
 			utils.NewErrorResponse(fmt.Sprintf("failed to find device, error: '%s'", err.Error())))
+		return
 	}
 
 	jsonResponse, err := json.Marshal(response)
@@ -95,7 +97,7 @@ func (h *Handler) getDeviceByID(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, string(jsonResponse))
 }
 
-func (h *Handler) getDevice(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetDevice(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	brand, err := utils.RetrieveParam(r, "brand")
 	if err != nil {
@@ -107,6 +109,7 @@ func (h *Handler) getDevice(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.WriteErrModel(w, http.StatusNotFound,
 			utils.NewErrorResponse(fmt.Sprintf("failed to find device, error: '%s'", err.Error())))
+		return
 	}
 
 	jsonResponse, err := json.Marshal(response)
@@ -120,7 +123,7 @@ func (h *Handler) getDevice(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, string(jsonResponse))
 }
 
-func (h *Handler) updateDevice(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	id, err := utils.RetrieveParam(r, "id")
 	if err != nil {
@@ -145,8 +148,9 @@ func (h *Handler) updateDevice(w http.ResponseWriter, r *http.Request) {
 
 	response, err := h.UpdateDeviceUseCase.Execute(ctx, &device)
 	if err != nil {
-		utils.WriteErrModel(w, http.StatusNotFound,
+		utils.WriteErrModel(w, http.StatusBadRequest,
 			utils.NewErrorResponse(fmt.Sprintf("failed to update device, error:'%s'", err.Error())))
+		return
 	}
 
 	jsonResponse, err := json.Marshal(response)
@@ -160,7 +164,7 @@ func (h *Handler) updateDevice(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, string(jsonResponse))
 }
 
-func (h *Handler) deleteDevice(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) DeleteDevice(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	id, err := utils.RetrieveParam(r, "id")
 	if err != nil {
@@ -170,8 +174,9 @@ func (h *Handler) deleteDevice(w http.ResponseWriter, r *http.Request) {
 
 	response, err := h.DeleteDeviceUseCase.Execute(ctx, id)
 	if err != nil {
-		utils.WriteErrModel(w, http.StatusNotFound,
+		utils.WriteErrModel(w, http.StatusBadRequest,
 			utils.NewErrorResponse(fmt.Sprintf("failed to delete device, error: '%s'", err.Error())))
+		return
 	}
 
 	jsonResponse, err := json.Marshal(response)
@@ -185,7 +190,7 @@ func (h *Handler) deleteDevice(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, string(jsonResponse))
 }
 
-func (h *Handler) createDevice(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateDevice(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	defer r.Body.Close()
 
@@ -206,6 +211,7 @@ func (h *Handler) createDevice(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.WriteErrModel(w, http.StatusNotFound,
 			utils.NewErrorResponse(fmt.Sprintf("failed to create device, error: '%s'", err.Error())))
+		return
 	}
 
 	jsonResponse, err := json.Marshal(response)

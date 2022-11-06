@@ -30,6 +30,23 @@ func (c *updateDeviceUseCase) Execute(ctx context.Context, updateDevice *input.U
 		return nil, err
 	}
 
+	if updateDevice.Name == "" {
+		return nil, fmt.Errorf("failed name device is empty")
+	}
+
+	if updateDevice.Brand == "" {
+		return nil, fmt.Errorf("failed brand device is empty")
+	}
+
+	device, err := c.deviceRepository.FindDevice(ctx, updateDevice.Brand, updateDevice.Name)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get device")
+	}
+
+	if device != nil && device.ID != "" {
+		return nil, fmt.Errorf("failed, already exists device with the same name and brand")
+	}
+
 	//max 250
 	if len(updateDevice.Brand) > 250 {
 		//will discard the rest
@@ -45,7 +62,7 @@ func (c *updateDeviceUseCase) Execute(ctx context.Context, updateDevice *input.U
 
 	errUpdate := c.deviceRepository.UpdateDevice(ctx, deviceEntity)
 	if errUpdate != nil {
-		return nil, fmt.Errorf("cannot save device at database: %v", errUpdate)
+		return nil, fmt.Errorf("cannot update device at database: %v", errUpdate)
 	}
 
 	createDeviceOutput := &output.CreateDeviceOutput{

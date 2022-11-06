@@ -45,6 +45,15 @@ func (c *createDeviceUseCase) Execute(ctx context.Context, createDevice *input.C
 		return nil, fmt.Errorf("cannot create a device without brand")
 	}
 
+	device, err := c.deviceRepository.FindDevice(ctx, createDevice.Brand, createDevice.Name)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get device")
+	}
+
+	if device != nil && device.ID != "" {
+		return nil, fmt.Errorf("failed, already exists device with the same name and brand")
+	}
+
 	deviceEntity := &entities.Device{
 		ID:        id.String(),
 		Name:      createDevice.Name,
@@ -53,7 +62,6 @@ func (c *createDeviceUseCase) Execute(ctx context.Context, createDevice *input.C
 	}
 
 	err = c.deviceRepository.CreateDevice(ctx, deviceEntity)
-
 	if err != nil {
 		return nil, fmt.Errorf("cannot save device at database: %v", err)
 	}

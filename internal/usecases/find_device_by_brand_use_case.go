@@ -28,7 +28,7 @@ func (c *findDeviceByBrandUseCase) Execute(ctx context.Context, brand string) (*
 	}
 
 	if len(deviceEntity) == 0 {
-		return nil, fmt.Errorf("device not found")
+		return nil, fmt.Errorf("devices not found")
 	}
 
 	output := &output.ListDeviceOutput{

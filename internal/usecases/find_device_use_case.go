@@ -21,6 +21,9 @@ func NewFindDeviceUseCase(deviceRepository repositories.DeviceRepository) contra
 }
 
 func (c *findDeviceUseCase) Execute(ctx context.Context, brand, name string) (*output.FindDeviceOutput, error) {
+	if brand == "" || name == "" {
+		return nil, fmt.Errorf("failed brand or name are empty")
+	}
 
 	deviceEntity, err := c.deviceRepository.FindDevice(ctx, brand, name)
 	if err != nil {

@@ -44,6 +44,10 @@ Now it is possible access the application by the port 8088, follow the exemple t
 localhost:8088/devices
  ```
 
+ ## Example
+
+![alt text](https://github.com/jhmorais/device-manager/blob/main/rest-devices.png?raw=true)
+
 ## ☕ Testing Device Manager
 
 To run all the unit tests, follow the step:

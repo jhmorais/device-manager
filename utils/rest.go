@@ -56,7 +56,8 @@ func RetrieveParam(r *http.Request, idParam string) (string, error) {
 func ValidJSON(p interface{}) io.Reader {
 	data, err := json.Marshal(p)
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		return nil
 	}
 	return bytes.NewReader(data)
 }
